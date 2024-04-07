@@ -4,7 +4,7 @@ import requests
 app = Flask(__name__)
 
 def get_weather(city):
-    api_key = "bc5018a6325c8e4268f85617f400bd22"
+    api_key = "c12c00ca2fae6a11009ce36f6d0f6720"
     api_endpoint = "https://api.weatherstack.com/current"
     params = {"access_key": api_key, "query": city}
     response = requests.get(api_endpoint, params=params)
