@@ -3,35 +3,28 @@ import requests
 
 app = Flask(__name__)
 
-def get_response(question):
+def get_weather(city):
     api_key = "bc5018a6325c8e4268f85617f400bd22"
-    api_endpoint = "http://api.weatherstack.com/current"
-    params = {"query": question, "access_key": api_key}
-
+    api_endpoint = "https://api.weatherstack.com/current"
+    params = {"access_key": api_key, "query": city}
     response = requests.get(api_endpoint, params=params)
     if response.status_code == 200:
         return response.json()
     else:
-        return {"error": "Failed to fetch response."}
+        return {"error": "Failed to fetch weather data."}
 
 @app.route('/')
 def index():
-    return 'Hello, please go to /ask to ask a question.'
+    return 'Hello, please go to /weather to check weather.'
 
-@app.route('/ask', methods=['GET', 'POST'])
-def ask_question():
-    if request.method == 'POST':
-        question = request.form.get('question')
-    elif request.method == 'GET':
-        question = request.args.get('question')
+@app.route('/weather')
+def weather():
+    city = request.args.get('city')
+    if city:
+        weather_data = get_weather(city)
+        return jsonify(weather_data)
     else:
-        return 'Unsupported method.'
-
-    if question:
-        response = get_response(question)
-        return jsonify(response)
-    else:
-        return 'Please provide a question.'
+        return 'Please provide a city parameter.'
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
